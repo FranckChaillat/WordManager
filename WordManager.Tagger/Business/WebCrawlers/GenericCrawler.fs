@@ -1,4 +1,4 @@
-﻿namespace WordTagger
+﻿namespace WordManager.Tagger.Crawler
 module GenericCrawler =
 
     open FSharp.Data

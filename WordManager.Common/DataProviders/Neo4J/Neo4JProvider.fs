@@ -5,24 +5,7 @@ module Neo4JProvider =
     open System
     open System.Text.RegularExpressions
     open Grapher.Business.Utils
-    open WordManager.Common.Configuration
-
-
-    //let private driverObject = lazy(GraphDatabase.Driver(DataBaseConf.Neo4JSettings.ConnectionStrings.Neo4jWordBank,
-    //                                                     AuthTokens.Basic(DataBaseConf.Neo4JSettings.Neo4jlogin,
-    //                                                                      DataBaseConf.Neo4JSettings.Neo4jpw)))
-
-    //let private readResults (statementResult : IStatementResult) =
-    //   let result = [for res in statementResult do
-    //                   yield [for k in res.Values do yield (k.Key, k.)]]
-    //   let test = List.concat result
-    //   test
-
-
-    //let exec(query : string) = 
-    //    driverObject.Value.Session().ReadTransaction(fun tx -> 
-    //        tx.Run(query) |> readResults)
-    
+   
 
     (* Format given requests et turns it into json *)     
     let asJson (statements : string list) = 
@@ -70,6 +53,6 @@ module Neo4JProvider =
 
     let ``match`` = formatMatch >> asJson >> Neo4JHttpProvider.commit
     
-
-
     
+    //let neo4jProvider = 
+    //    GenericProvider.GenericProvider((formatMerge >> asJson), (formatMerge >> asJson), (formatMerge >> asJson))

@@ -1,7 +1,7 @@
-﻿namespace WordTagger
+﻿namespace WordManager.Tagger.Parser
 module Wildcard =
 
-    open Model.FrenchModel
+    open WordManager.Tagger.Model.FrenchModel
     open FSharp.Text.RegexProvider
 
     type private SyntaxRegex = Regex<"{(?<id>\d+:(?<class>NOUN|ADJ|PRON|VERB)\[(?<properties>.*)](\((?<function>SUBJECT|COMPLEMENT)?\))?->(?<target>\d+))};?">
@@ -16,13 +16,13 @@ module Wildcard =
         items : WildCardItem seq
     }
 
-    //let private matchWildCardItem (element: string)=
-    //    let mtch = SyntaxRegex().TypedMatch(element.Trim())
-    //    let ``class`` = mtch.``class``.Value.ToLowerInvariant()
-    //    let properties = mtch.properties.Value.ToLowerInvariant().Split(',')
-    //    let id = mtch.id.Value
-    //    let ``function`` = if mtch.``function``.Success then Some(mtch.``function``.Value) else None
-    //    id, ``class``, ``function``, properties
+    let private matchWildCardItem (element: string)=
+        let mtch = SyntaxRegex().TypedMatch(element.Trim())
+        let ``class`` = mtch.``class``.Value.ToLowerInvariant()
+        let properties = mtch.properties.Value.ToLowerInvariant().Split(',')
+        let id = mtch.id.Value
+        let ``function`` = if mtch.``function``.Success then Some(mtch.``function``.Value) else None
+        id, ``class``, ``function``, properties
 
     //let private tryParseNoun pattern =
     //    match matchWildCardItem(pattern) with

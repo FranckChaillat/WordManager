@@ -1,4 +1,4 @@
-﻿namespace Model
+﻿namespace WordManager.Tagger.Model
 module FrenchModel =
 
     (**Noun or pronoun gender**)

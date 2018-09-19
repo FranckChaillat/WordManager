@@ -5,7 +5,7 @@ module Neo4JTest =
       open Grapher.Business.PathFinding
       open Grapher.Business.Utils
       open Grapher.Entities.Items
-      open WordManager.Common.DataProvider
+      open WordManager.Common.DataProvider.Neo4JProvider
 
 
       
@@ -308,40 +308,40 @@ module Neo4JTest =
          Assert.True(graphStr.Equals(result))
       
 
-      //[<Fact>]
-      //let testQueryBuilding() =
-      //   let n1 = labeledNode "Node1"
-      //   let n2 = labeledNode "Node2"
+      [<Fact>]
+      let testQueryBuilding() =
+         let n1 = labeledNode "Node1"
+         let n2 = labeledNode "Node2"
 
-      //   let res = n1 ---"n1ton2" --> n2
-      //   let query = (formatMerge res).Head
-      //   Assert.Equal("MERGE (n0 : Node1)-[e00:n1ton2]->(n1 : Node2)", query)
+         let res = n1 ---"n1ton2" --> n2
+         let query = (formatMerge res).Head
+         Assert.Equal("MERGE (n0 : Node1)-[e00:n1ton2]->(n1 : Node2)", query)
 
 
-      //[<Fact>]
-      //let testQueryBuilding2() =
-      //   let n1 = labeledNode "Node1"
-      //   let n2 = labeledNode "Node2"
-      //   let n3 = labeledNode "Node3"
-      //   let n4 = labeledNode "Node4"
+      [<Fact>]
+      let testQueryBuilding2() =
+         let n1 = labeledNode "Node1"
+         let n2 = labeledNode "Node2"
+         let n3 = labeledNode "Node3"
+         let n4 = labeledNode "Node4"
 
-      //   let res = n1 --- "n1to2" --> n2 --- "n2to4" --> n4
-      //   let query = (formatMerge res).Head
-      //   Assert.Equal("MERGE (n0 : Node1)-[e00:n1to2]->(n1 : Node2)-[e11:n2to4]->(n2 : Node4)", query)
+         let res = n1 --- "n1to2" --> n2 --- "n2to4" --> n4
+         let query = (formatMerge res).Head
+         Assert.Equal("MERGE (n0 : Node1)-[e00:n1to2]->(n1 : Node2)-[e11:n2to4]->(n2 : Node4)", query)
       
 
-      //[<Fact>]
-      //let testQueryBuilding3() =
-      //   let n1 = node "Node1" [("name", "franck" :> obj); ("age", 24 :> obj)]
-      //   let n2 = labeledNode "Node2"
-      //   let n3 = labeledNode "Node3"
-      //   let n4 = labeledNode "Node4"
+      [<Fact>]
+      let testQueryBuilding3() =
+         let n1 = node "Node1" [("name", "franck" :> obj); ("age", 24 :> obj)]
+         let n2 = labeledNode "Node2"
+         let n3 = labeledNode "Node3"
+         let n4 = labeledNode "Node4"
 
-      //   let res = n1 --- "n1to2" --> n2
-      //             .+ (n3 --- "n3to2" --> n2)
+         let res = n1 --- "n1to2" --> n2
+                   .+ (n3 --- "n3to2" --> n2)
 
-      //   let mergeStatement = String.concat "," (formatMerge res)
-      //   Assert.Equal("MERGE (n3 : Node2),MERGE (n0 : Node1{name : 'franck',age : 24})-[e00:n1to2]->(n3),MERGE (n2 : Node3)-[e20:n3to2]->(n3)", mergeStatement)
+         let mergeStatement = String.concat "," (formatMerge res)
+         Assert.Equal("MERGE (n3 : Node2),MERGE (n0 : Node1{name : 'franck',age : 24})-[e00:n1to2]->(n3),MERGE (n2 : Node3)-[e20:n3to2]->(n3)", mergeStatement)
          
 
       [<Fact>]
@@ -383,9 +383,9 @@ module Neo4JTest =
 
          let paths = getGraphPaths res
          Assert.True(paths.Length = 3)
-         let p1 = (List.nth paths 0) |> List.map(fun x -> x.id)
-         let p2 = (List.nth paths 1) |> List.map(fun x -> x.id)
-         let p3 = (List.nth paths 2) |> List.map(fun x -> x.id)
+         let p1 = paths.[0] |> List.map(fun x -> x.id)
+         let p2 = paths.[1] |> List.map(fun x -> x.id)
+         let p3 = paths.[2] |> List.map(fun x -> x.id)
          Assert.True([3;4;6] = p1)
          Assert.True([0;4] = p2)
          Assert.True([4;2] = p3)
@@ -420,6 +420,7 @@ module Neo4JTest =
         Assert.True(e.name = "know")
         Assert.Equal("know", e.name)
     
+
       [<Fact>]
       let testGraphDeserialization2() = 
         let jsonRes = """ {"results":
@@ -463,22 +464,21 @@ module Neo4JTest =
          let n5 = labeledNode "Node5"
           
          let graph = n1 --- "n1to2" --> n2 --- "n2to4" --> n4
-         //let result = ``WordManager.Common``.Commands.merge graph
-         let result = Neo4JProvider.exec("MATCH (a)-[rel]->(b) RETURN a,rel,b")
+         let result = WordManager.Common.DataProvider.Neo4JProvider.merge graph
          Assert.True(true)
 
     
         
         
-//      [<Fact>]
-//      let testStatementsFormating2() =
+      [<Fact>]
+      let testStatementsFormating2() =
           
-//         //let graph = (labeledNode "Test1") ---"know" --> (labeledNode "Test2") --- "know" --> (labeledNode "Test3")
-//         //let result = Neo4JConnector.Commands.``match`` graph
-//         let res = ``WordManager.Common``.Neo4JHttpProvider.commit """{
-//  "statements" : [ {
-//    "statement" : "match (n0)-[rel:know]->(n1) return n0,rel,n1",
-//    "resultDataContents" : [ "graph" ]
-//  } ]
-//}"""
-//         Assert.True(true)
+         //let graph = (labeledNode "Test1") ---"know" --> (labeledNode "Test2") --- "know" --> (labeledNode "Test3")
+         //let result = Neo4JConnector.Commands.``match`` graph
+         let res = WordManager.Common.DataProvider.Neo4JHttpProvider.commit """{
+          "statements" : [ {
+            "statement" : "match (n0)-[rel:know]->(n1) return n0,rel,n1",
+            "resultDataContents" : [ "graph" ]
+          } ]
+        }"""
+         Assert.True(true)

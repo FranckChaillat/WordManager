@@ -5,7 +5,6 @@ module WordTaggerService =
     open Suave
     open Suave.Successful
     open FSharp.Data
-    open WordTracking
     open SettingsEcosystem
 
 

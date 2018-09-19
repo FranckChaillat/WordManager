@@ -1,7 +1,7 @@
-﻿namespace WordTagger
+﻿namespace WordManager.Tagger.Parser
 module Parser =
 
-    open Model.FrenchModel
+    open WordManager.Tagger.Model.FrenchModel
     open System.IO
     open WordTagger.SettingsEcosystem
     open FSharp.Text.RegexProvider
@@ -58,17 +58,17 @@ module Parser =
             None
         
 
-    //(**Public functions**)
-    //let getWordTypes (patternStr : string) : Word list= 
-    //    let mtch = SyntaxRegex().TypedMatches(patternStr)
-    //    let res = mtch 
-    //              |> Seq.map(fun mtch -> 
-    //                    match mtch.element.Value with
-    //                    |Verb(setting, group, target) -> Verb("verb", setting, group)
-    //                    |Adjective(time, gender, target) -> Adjective("")
-    //                    |_ -> 0
-    //              )
-    //    []
+    (**Public functions**)
+    let getWordTypes (patternStr : string) : Word list= 
+        let mtch = SyntaxRegex().TypedMatches(patternStr)
+        let res = mtch 
+                  |> Seq.map(fun mtch -> 
+                        match mtch.element.Value with
+                        |Verb(setting, group, target) -> Verb("verb", (setting, group))
+                        |Adjective(time, gender, target) -> Adjective("")
+                        |_ -> Adjective("")
+                  )
+        []
         
    
                 

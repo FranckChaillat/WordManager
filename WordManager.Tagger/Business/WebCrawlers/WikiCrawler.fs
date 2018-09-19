@@ -1,4 +1,4 @@
-﻿namespace WordTagger
+﻿namespace WordManager.Tagger.Crawler
 
 module WikiCrawler =
         
@@ -17,7 +17,6 @@ module WikiCrawler =
                 |> Map.ofSeq
 
             
-            
     let private getWordType (document : HtmlDocument) =
         document.Descendants ["h3"] 
             |> Seq.tryItem 1
@@ -28,21 +27,18 @@ module WikiCrawler =
     
 
     let private getLinkedWords (htmlDoc : HtmlDocument) =
-        let content = htmlDoc.Descendants ["ol"]
-                          |> Seq.collect(fun x -> x.Descendants ["li"])
-                          |> Seq.map(fun x -> let mtch =  Regex.Match(x.ToString(), "<li>(?<test>.*)<ul>", RegexOptions.Singleline).Value
-                                              if mtch.Length > 0 then
-                                                let parsed = HtmlNode.Parse(mtch).Head
-                                                let linkText = parsed.Descendants ["a"] |> Seq.map(fun e -> e.InnerText())
-                                                String.concat " " linkText + parsed.DirectInnerText()
-                                              else 
-                                                ""
-                                              )
-                         |> Seq.where (fun row -> row.Length > 0)
-                         |> Seq.collect (fun row -> let cleaned = Regex.Replace(row, "\w’|\w'", "")
-                                                    row.Split(' '))
-                         |> Seq.where (fun word -> word.Length > 0)
-        content  
+        htmlDoc.Descendants ["ol"]
+        |> Seq.collect(fun x -> x.Descendants ["li"])
+        |> Seq.map(fun x -> let mtch =  Regex.Match(x.ToString(), "<li>(?<test>.*)<ul>", RegexOptions.Singleline).Value
+                            if mtch.Length > 0 then
+                                let parsed = HtmlNode.Parse(mtch).Head
+                                let linkText = parsed.Descendants ["a"] |> Seq.map(fun e -> e.InnerText())
+                                String.concat " " linkText + parsed.DirectInnerText()
+                            else "" )
+        |> Seq.where (fun row -> row.Length > 0)
+        |> Seq.collect (fun row -> row.Split(' '))
+        |> Seq.where (fun word -> word.Length > 0)
+
 
 
     let private getWordGender = regexMatch "<p><b>.*<\/b>.*<span class=\"ligne-de-forme\"><i>(?<gender>féminin|masculin)"
@@ -54,4 +50,4 @@ module WikiCrawler =
     let getCrawler word = 
         let lowered = word |> Seq.map(fun e -> Char.ToLowerInvariant(e)) |> String.Concat
         let document = HtmlDocument.Load("http://fr.wiktionary.org/wiki/"+lowered)
-        Crawler(getWordType, getWordGender, getLinkedWords, word, document) 
+        Crawler(getWordType, getWordGender, getLinkedWords, word, document)

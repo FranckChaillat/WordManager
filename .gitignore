@@ -1,8 +1,5 @@
-﻿################################################################################
-# Ce fichier .gitignore a été automatiquement créé par Microsoft(R) Visual Studio.
-################################################################################
-
-/Framework/obj/Debug
+﻿/bin/Debug
+/bin/obj
 /packages
-/.vs/WordManager.Tagger
-/WordManager.WordPatternProvider/obj/Debug
+/.vs/WordManager.Tagger/v15
+/WordManager.Common/.vs/WordManager.Common/v15

@@ -1,12 +1,12 @@
-﻿namespace WordTagger
+﻿namespace WordManager.Tagger
 
 module WordTracking=
 
     open Model.FrenchModel      
     open WordManager.Framework.Tools
-    open Grapher.Entities.Items
-    open WordManager.Common.DataProvider.Neo4JProvider
-    open GenericCrawler
+    open WordManager.Tagger.Crawler.GenericCrawler
+
+
 
     type RawInfo = { word : string; content : string; textType : string option}
 
@@ -57,7 +57,7 @@ module WordTracking=
                                           linkedTo = (crawler.GetLinkedWords crawler.GetContent) |> Seq.toList } )
 
 
-    (**Append word to word database**)
+    //(**Append word to word database**)
     //let appendWord (word: WordTag) =
     //   word.word |> List.map(Word.format)
     //             |> List.map(fun x -> let optionGraph = nodesToGraph [(node "Word" x)]
@@ -67,7 +67,7 @@ module WordTracking=
       
     //let getWord (word : string) =
     //     nodeToGraph (labeledNode "Word")
-    //     |> ``merge``
+    //     |>  ``merge``
                         
 
     
