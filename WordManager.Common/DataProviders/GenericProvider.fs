@@ -2,9 +2,9 @@
 
 module GenericProvider =
 
-    type GenericProvider<'T, 'U>(insertStrategy : string -> int option,
-                                 updateStrategy : string -> int option,
-                                 retrieveStrategy : 'U -> 'T) =
+    type GenericProvider<'A, 'B, 'OUT>(insertStrategy : 'A -> string,
+                                       updateStrategy : 'A -> string,
+                                       retrieveStrategy : 'B -> 'OUT option) =
         member this.insert = insertStrategy
         member this.update = updateStrategy
         member this.retrieve = retrieveStrategy

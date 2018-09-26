@@ -51,10 +51,12 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
+    <Compile Include="Entities\CouchDocument.fs" />
     <Compile Include="Configuration\DataBaseConf.fs" />
     <Compile Include="DataProviders\GenericProvider.fs" />
     <Compile Include="DataProviders\Neo4J\Neo4JHttpProvider.fs" />
     <Compile Include="DataProviders\Neo4J\Neo4JProvider.fs" />
+    <Compile Include="DataProviders\CouchBase\CouchBaseProvider.fs" />
     <Content Include="couchbase.config" />
     <Content Include="neo4j.config" />
     <Compile Include="AssemblyInfo.fs" />
@@ -124,7 +126,7 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Framework\WordManager.Framework.fsproj">
+    <ProjectReference Include="..\WordManager.Framework\WordManager.Framework.fsproj">
       <Name>WordManager.Framework</Name>
       <Project>{ff3ea96d-b19d-4297-97ea-1968f55b358f}</Project>
       <Private>True</Private>
