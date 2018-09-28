@@ -16,7 +16,8 @@ module Items =
       properties : (string * obj) list
       direction : Direction
     }
-    and Node =  {
+
+    type Node =  {
         id : int
         label : string option
         properties : (string * obj) list
@@ -108,6 +109,7 @@ module Items =
     
     (******Functions******)
     let inline (==) (n1: Node)(n2: Node) = (n1.label = n2.label) && (n1.properties = n2.properties)
+    
 
     let concatGraph (g1:Graph) (g2: Graph) =
         //concatening graphs
@@ -117,7 +119,10 @@ module Items =
                                 concat (h :: nodeLst1) t
                              else
                                 let commonNode = nodeLst1 |> List.find (fun n -> n == h)
-                                let updated = {h with outputNodes = commonNode.outputNodes @ h.outputNodes}
+                                let updatedids = 
+                                    h.outputNodes |> Seq.map(fun (n,e) -> { n with id = n.id - 1}, e) |> Seq.toList
+
+                                let updated = {h with id = commonNode.id; outputNodes = commonNode.outputNodes @ updatedids}
                                 let res = nodeLst1 |> List.replace (fun x -> x == h) updated
                                 concat res t
                 | [] -> { g1 with nodelst = nodeLst1}

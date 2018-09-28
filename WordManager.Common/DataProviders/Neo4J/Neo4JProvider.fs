@@ -53,6 +53,6 @@ module Neo4JProvider =
 
     let ``match`` = formatMatch >> asJson >> Neo4JHttpProvider.commit >> Utils.jsonToGraph
     
-    
+
     let neo4jProvider = 
         GenericProvider.GenericProvider(merge, merge, ``match``)

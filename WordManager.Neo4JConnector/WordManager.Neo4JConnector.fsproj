@@ -53,10 +53,11 @@
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
     <Content Include="app.config" />
-    <Compile Include="Entities\Neo4JItems.fs" />
+    <Compile Include="Entities\GraphItems.fs" />
     <Compile Include="Entities\Neo4JJson.fs" />
     <Compile Include="Business\PathFinding.fs" />
     <Compile Include="Business\Utils.fs" />
+    <Compile Include="Business\ClusteringUtils.fs" />
     <None Include="Script.fsx" />
     <Content Include="packages.config" />
   </ItemGroup>
