@@ -55,6 +55,7 @@
     <Compile Include="DataProviders\GenericProvider.fs" />
     <Compile Include="DataProviders\Neo4J\Neo4JHttpProvider.fs" />
     <Compile Include="DataProviders\Neo4J\Neo4JProvider.fs" />
+    <Compile Include="DataProviders\CouchBase\CouchBaseProvider.fs" />
     <Content Include="couchbase.config" />
     <Content Include="neo4j.config" />
     <Compile Include="AssemblyInfo.fs" />

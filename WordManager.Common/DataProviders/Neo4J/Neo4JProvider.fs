@@ -5,6 +5,7 @@ module Neo4JProvider =
     open System
     open System.Text.RegularExpressions
     open Grapher.Business.Utils
+    open Grapher.Business
    
 
     (* Format given requests et turns it into json *)     
@@ -51,8 +52,8 @@ module Neo4JProvider =
     let merge = formatMerge >> asJson >> Neo4JHttpProvider.commit
 
 
-    let ``match`` = formatMatch >> asJson >> Neo4JHttpProvider.commit
+    let ``match`` = formatMatch >> asJson >> Neo4JHttpProvider.commit >> Utils.jsonToGraph
     
     
-    //let neo4jProvider = 
-    //    GenericProvider.GenericProvider((formatMerge >> asJson), (formatMerge >> asJson), (formatMerge >> asJson))
+    let neo4jProvider = 
+        GenericProvider.GenericProvider(merge, merge, ``match``)

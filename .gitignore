@@ -3,3 +3,7 @@
 /packages
 /.vs/WordManager.Tagger/v15
 /WordManager.Common/.vs/WordManager.Common/v15
+/WordManager.Framework/bin/Debug
+/WordManager.Tagger/obj
+/WordManager.Test/bin/Debug
+/WordManager.Test/obj
