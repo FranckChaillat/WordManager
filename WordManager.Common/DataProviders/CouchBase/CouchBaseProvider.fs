@@ -3,30 +3,16 @@ module CouchBaseProvider =
     
     open Couchbase.Core
     open Couchbase.Configuration
-    open Couchbase.Configuration.Client
-    open WordManager.Common.Configuration
-    open System
-    open Couchbase
-
-    let private configuration =
-        let mutable configuration = new ClientConfiguration()
-        let servers = new System.Collections.Generic.List<Uri>()
-        servers.Add(new Uri(DataBaseConf.CouchBaseSettings.WordpatternCluster))
-        configuration.Servers <- servers
-        configuration
-    
-    ClusterHelper.Initialize(configuration)
-    ClusterHelper.GetBucket("")
-namespace WordManager.Common.DataProvider
-module CouchBaseProvider=
-
-    open Couchbase
-    open Couchbase.Configuration.Client
-    open Couchbase.Authentication
-    open WordManager.Common.Configuration
-    open WordManager.Common.Entities
     open WordManager.Framework.Tools.Operators
+    open Couchbase.Configuration.Client
+    open WordManager.Common.Configuration
     open System
+    open Couchbase
+    open Couchbase.Authentication
+    open WordManager.Common.Entities
+    open WordManager.Common.DataProvider
+    
+
     
     let private getConfiguration =
         let serverList = new System.Collections.Generic.List<Uri>()
