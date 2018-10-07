@@ -1,7 +1,6 @@
 ﻿namespace WordManager.Common.DataProvider
 module Neo4JProvider =
 
-    open Neo4j.Driver.V1
     open System
     open System.Text.RegularExpressions
     open Grapher.Business.Utils
@@ -54,6 +53,6 @@ module Neo4JProvider =
 
     let ``match`` = formatMatch >> asJson >> Neo4JHttpProvider.commit >> Utils.jsonToGraph
     
-    
+
     let neo4jProvider = 
         GenericProvider.GenericProvider(merge, merge, ``match``)

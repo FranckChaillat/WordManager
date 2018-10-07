@@ -58,6 +58,7 @@
     <Content Include="App.config" />
     <Compile Include="AssemblyInfo.fs" />
     <Compile Include="Neo4JTest.fs" />
+    <Compile Include="ClusteringTest.fs" />
     <Compile Include="FrameworkTest.fs" />
     <Compile Include="WordTagTest.fs" />
     <Compile Include="SyntacticParserTest.fs" />

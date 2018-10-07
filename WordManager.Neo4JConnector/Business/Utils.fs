@@ -8,6 +8,7 @@ module Utils =
     open WordManager.Framework.Tools.ListExtensions
     open FSharp.Data
     open Grapher.Entities
+    open System.Collections
 
 
     let parseJsonProperties propertyString = 
@@ -90,20 +91,21 @@ module Utils =
 
     (*Transforme un graphe en une représentation textuelle aprés extraction des différents chemins*)
     let graphToString graph =
-        let rec pathToString namedNodes acc edgeIndex path = 
+        let rec pathToString (namedNodes: Generic.IDictionary<Node,string>) acc edgeIndex path = 
             match path with
-            | h :: tail -> let nodeStr = namedNodes 
-                                          |> List.tryFind(fun (n, str) -> n == h) 
-                                          |> Option.map(fun (_,name) -> "("+name+")")
-                                          |? nodeToString h 
-
-                           let lnkTonext = List.tryHead(tail)
-                                            |> Option.map(fun next -> h.outputNodes 
-                                                                       |> List.tryFind(fun (n,e) -> n == next)
-                                                                       |> Option.map(fun (n,e) -> edgeToString ("e"+ string(h.id) + string(edgeIndex)) e)
-                                                                       |? "")
-                                            |? ""
-                           pathToString (namedNodes) (acc + nodeStr + lnkTonext) (edgeIndex + 1) (tail)
+            | h :: tail -> 
+                let nodeStr = namedNodes.TryGetValue(h)
+                                |> (function (true, str) -> Some(str) |_ -> Option.None)
+                                |> Option.map(fun name -> "("+name+")")
+                                |? nodeToString h
+                           
+                let lnkTonext = List.tryHead(tail)
+                                |> Option.map(fun next -> h.outputNodes 
+                                                            |> List.tryFind(fun (n,e) -> n == next)
+                                                            |> Option.map(fun (n,e) -> edgeToString ("e"+ string(h.id) + string(edgeIndex)) e)
+                                                            |? "")
+                                |? ""
+                pathToString (namedNodes) (acc + nodeStr + lnkTonext) (edgeIndex + 1) (tail)
             | []     -> acc
 
         let paths = getGraphPaths graph
@@ -113,7 +115,7 @@ module Utils =
                                    |> Seq.distinctBy(fun x -> (x.id, x.label, x.properties)) |> List.ofSeq
                                    |> List.partition (fun x -> (flattenNodes |> List.count(fun n -> x == n)) > 1)
 
-        let named = redundant |> List.map(fun x -> x, "n"+ string(x.id))
+        let named = redundant |> List.map(fun x -> x, "n"+ string(x.id)) |> dict
         let prefixNodeDeclaration = nodesToString redundant
         let other = paths |> List.map (fun path -> pathToString named "" 0 path)
         prefixNodeDeclaration @ other
