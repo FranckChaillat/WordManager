@@ -106,7 +106,12 @@ module Items =
             (edge.name, edge.properties) |> Some
         else Option.None
     
-    
+    (******Private functions******)
+
+    let private updateNodeIdentifier (n : Node) =
+        { n with id = n.id - 1 ; 
+                 outputNodes = n.outputNodes |> Seq.map(fun (n,e) -> { n with id = n.id - 1}, e) |> Seq.toList }
+
     (******Functions******)
     let inline (==) (n1: Node)(n2: Node) = (n1.label = n2.label) && (n1.properties = n2.properties)
     
@@ -115,16 +120,17 @@ module Items =
         //concatening graphs
         let rec concat nodeLst1 nodeLst2 =
             match nodeLst2 with
-                | h :: t ->  if not <| (List.exists (fun n -> n == h) <| nodeLst1) then
-                                concat (h :: nodeLst1) t
-                             else
-                                let commonNode = nodeLst1 |> List.find (fun n -> n == h)
-                                let updatedids = 
-                                    h.outputNodes |> Seq.map(fun (n,e) -> { n with id = n.id - 1}, e) |> Seq.toList
+                | h :: tail ->  if not <| (List.exists (fun n -> n == h) <| nodeLst1) then
+                                    concat (h :: nodeLst1) tail
+                                else
+                                    let commonNode = nodeLst1 |> List.find (fun n -> n == h)
+                                    let updatedids = 
+                                        h.outputNodes |> Seq.map(fun (n,e) -> { n with id = n.id - 1}, e) |> Seq.toList
 
-                                let updated = {h with id = commonNode.id; outputNodes = commonNode.outputNodes @ updatedids}
-                                let res = nodeLst1 |> List.replace (fun x -> x == h) updated
-                                concat res t
+                                    let updated = {h with id = commonNode.id; outputNodes = commonNode.outputNodes @ updatedids}
+                                    let res = nodeLst1 |> List.replace (fun x -> x == h) updated
+
+                                    concat res (tail |> List.map (updateNodeIdentifier))
                 | [] -> { g1 with nodelst = nodeLst1}
         
         let idsUpdated = GraphHelper.updateIds g1.nodelst g2.nodelst
@@ -183,4 +189,5 @@ module Items =
             outputNode = node
         }
 
+    
     

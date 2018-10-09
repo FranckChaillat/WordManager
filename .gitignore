@@ -7,3 +7,8 @@
 /WordManager.Tagger/obj
 /WordManager.Test/bin/Debug
 /WordManager.Test/obj
+/WordManager.Common/bin/Debug
+/WordManager.Common/obj/Debug
+/WordManager.Framework/obj/Debug
+/WordManager.Neo4JConnector/bin/Debug
+/WordManager.Neo4JConnector/obj/Debug

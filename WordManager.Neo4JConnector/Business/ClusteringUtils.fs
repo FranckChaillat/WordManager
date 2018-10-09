@@ -3,29 +3,17 @@
 module ClusteringUtils =
 
     open Grapher.Entities.Items
-    open WordManager.Framework.Tools.Seq
+    open WordManager.Framework.Tools.ListExtensions
 
 
-    let count(predicate : 't -> bool)(collection : 't seq) = 
-        let rec f count (col: 't list) =
-            match col with
-            | h :: t when predicate h ->
-                f (count + 1) t
-            | _ :: t -> 
-                f count t
-            | _ -> count
+    let getTransition(graph : Graph) : int[,] =
+        let matrix = Array2D.zeroCreate graph.Length graph.Length
         
-        f 0 (collection |> List.ofSeq)
-
-
-    let getTransition(graph : Graph) =
-        let matrix = Array2D.init graph.Length graph.Length (fun x y -> 0)
-
         let rec apply nodes = 
             match nodes with
             | h :: t -> 
                 let nextNodes = h.outputNodes
-                let collect = (fun i -> nextNodes |> count(fun (n, _) -> i = n.id))
+                let collect = (fun i -> nextNodes |> List.count(fun (n, _) -> i = n.id))
                 let occurrences = [0 .. graph.Length - 1] 
                                   |> Seq.map (fun i -> i, collect i)
             
@@ -36,3 +24,10 @@ module ClusteringUtils =
             | [] -> matrix
 
         apply (Graph.nodes graph)
+
+    
+    let normalize (arr : int[,]) =
+       let len = Array2D.length1(arr) 
+       arr |> Array2D.map(fun y -> (float(y) / float(len)))
+       
+        

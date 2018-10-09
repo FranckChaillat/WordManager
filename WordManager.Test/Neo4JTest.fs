@@ -286,6 +286,7 @@ module Neo4JTest =
          Assert.Equal(4, res.Length)
          Assert.True(List.exists (fun x -> x == n4) nodes)
          Assert.True(nodes |> List.find(fun x -> x == n2) |> (fun x -> x.outputNodes.Length = 2))
+         Assert.True(res |> Graph.nodes |> List.forall(fun node -> node.id <= 3))
        
          
       [<Fact>]
@@ -364,9 +365,9 @@ module Neo4JTest =
 
          let links = scnd.outputNodes |> List.map(fun (n, _) -> n.id)
 
-         Assert.True(first.id = 3 && first.label = Some "Node4")
+         Assert.True(first.id = 2 && first.label = Some "Node4")
          Assert.True(thrd.id = 1 && thrd.label = Some "Node3")
-         Assert.True(scnd.id = 2 && links = [1;3])
+         Assert.True(scnd.id = 0 && links = [1;2])
          
 
 
