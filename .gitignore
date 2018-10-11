@@ -3,3 +3,10 @@
 /packages
 /.vs/WordManager.Tagger/v15
 /WordManager.Common/.vs/WordManager.Common/v15
+/WordManager.Common/obj/Debug
+/WordManager.Common/obj
+/WordManager.Framework/obj/Debug
+/WordManager.Framework/obj
+/WordManager.Neo4JConnector/obj
+/WordManager.Tagger/obj
+/WordManager.Test/obj
