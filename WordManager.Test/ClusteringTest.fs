@@ -5,15 +5,13 @@ module ClusteringTest=
     open Xunit
     open Grapher.Entities.Items
     open WordManager.Grapher.Clustering
+    open System.Linq.Expressions
 
     [<Fact>]
     let testGetTransitionMatrix() =
         let n1 = labeledNode "Node1"
         let n2 = labeledNode "Node2"
-        let n3 = labeledNode "Node3"
         let n4 = labeledNode "Node4"
-        let n5 = labeledNode "Node5"
-        let n6 = labeledNode "Node6"
 
         let res = n1 --- "1to2" --> n2 --- "2to4" --> n4
 
@@ -38,6 +36,7 @@ module ClusteringTest=
         Assert.True(trans.[2,*]  = [|0;0;0;0|])
         Assert.True(trans.[3,*]  = [|0;0;0;0|])
 
+
     [<Fact>]
     let testMatrixNormalization() = 
         let n1 = labeledNode "Node1"
@@ -55,4 +54,30 @@ module ClusteringTest=
         Assert.True(normalized.[3,*] = [|0.0; 0.0; 0.0; 0.0|])
 
 
+    [<Fact>]
+    let testMatrixExpansion() =
+        let mat = [| [|1.0;2.0;3.0|]; [|4.0; 5.0; 6.0|]; [|7.0; 8.0 ; 9.0;|] |]
+        let twoDimArr = Array2D.zeroCreate 3 3
+        mat |> Array.iteri(fun i e -> e |> Array.iteri(fun j v -> Array2D.set twoDimArr i j v))
+        let expanded = ClusteringUtils.expand(1)(twoDimArr)
+        Assert.True(expanded.[0,*] = [|30.0; 36.0; 42.0|])
+        Assert.True(expanded.[1,*] = [|66.0; 81.0; 96.0|])
+        Assert.True(expanded.[2,*] = [|102.0; 126.0; 150.0|])
 
+
+    [<Fact>]
+    let testMatrixExpansionWithFloat() =
+        let mat = [| [|0.23;0.11;0.7|]; [|0.99; 1.0; 1.0|]; [|0.0; 0.86 ; 0.5|] |]
+        let twoDimArr = Array2D.zeroCreate 3 3
+        mat |> Array.iteri(fun i e -> e |> Array.iteri(fun j v -> Array2D.set twoDimArr i j v))
+        let expanded = ClusteringUtils.expand(1)(twoDimArr)
+        Assert.True(expanded.[0,*] = [|0.1618; 0.7373; 0.621|])
+
+
+    [<Fact>]
+    let testMatrixExpansionWithNegativeExpansion() = 
+        let mat = [| [|0.23;0.11;0.7|]; [|0.99; 1.0; 1.0|]; [|0.0; 0.86 ; 0.5|] |]
+        let twoDimArr = Array2D.zeroCreate 3 3
+        mat |> Array.iteri(fun i e -> e |> Array.iteri(fun j v -> Array2D.set twoDimArr i j v))
+        let expanded = ClusteringUtils.expand(-1)(twoDimArr)
+        

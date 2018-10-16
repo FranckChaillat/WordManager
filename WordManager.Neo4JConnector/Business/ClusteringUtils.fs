@@ -30,4 +30,27 @@ module ClusteringUtils =
        let len = Array2D.length1(arr) 
        arr |> Array2D.map(fun y -> (float(y) / float(len)))
        
+    
+    let expand(expandingFactor : int)(matrix : float[,]) : float[,] =
         
+        let expanded = Array2D.zeroCreate (Array2D.length1 matrix) (Array2D.length2 matrix)
+
+        let apply (currentMat: float[,]) =
+            for i in [0..(Array2D.length1 matrix-1) ] do
+                for j in [0..(Array2D.length2 matrix-1) ] do
+                    let row = matrix.[i, *]
+                    let col = currentMat.[*, j]
+                    Array.zip row (col)
+                    |> Array.map(fun (a,b) -> a * b)
+                    |> Array.sum
+                    |> Array2D.set expanded i j
+         
+        let rec recursivlyExpand expandFactor currentMat =
+            if expandFactor = 0 then
+                apply currentMat
+            else 
+                apply(currentMat)
+                recursivlyExpand (expandFactor-1) expanded
+
+        recursivlyExpand (expandingFactor-1) matrix
+        expanded
