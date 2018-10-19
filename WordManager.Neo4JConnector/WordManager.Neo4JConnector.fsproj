@@ -55,6 +55,7 @@
     <Content Include="app.config" />
     <Compile Include="Entities\GraphItems.fs" />
     <Compile Include="Entities\Neo4JJson.fs" />
+    <Compile Include="Entities\MclOptions.fs" />
     <Compile Include="Business\PathFinding.fs" />
     <Compile Include="Business\Utils.fs" />
     <Compile Include="Business\ClusteringUtils.fs" />

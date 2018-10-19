@@ -3,7 +3,10 @@
 module ClusteringUtils =
 
     open Grapher.Entities.Items
+    open Grapher.Entities.MclOptions
     open WordManager.Framework.Tools.ListExtensions
+    open System
+    open Grapher.Entities
 
 
     let getTransition(graph : Graph) : int[,] =
@@ -31,7 +34,7 @@ module ClusteringUtils =
        arr |> Array2D.map(fun y -> (float(y) / float(len)))
        
     
-    let expand(expandingFactor : int)(matrix : float[,]) : float[,] =
+    let expand(option : MclOptions)(matrix : float[,]) : float[,] =
         
         let expanded = Array2D.zeroCreate (Array2D.length1 matrix) (Array2D.length2 matrix)
 
@@ -51,6 +54,8 @@ module ClusteringUtils =
             else 
                 apply(currentMat)
                 recursivlyExpand (expandFactor-1) expanded
-
-        recursivlyExpand (expandingFactor-1) matrix
+        
+       
+        let (expansionFactor, _) = MclOptions.get(option)
+        recursivlyExpand (expansionFactor) matrix
         expanded
