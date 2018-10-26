@@ -5,7 +5,6 @@ module ClusteringUtils =
     open Grapher.Entities.Items
     open Grapher.Entities.MclOptions
     open WordManager.Framework.Tools.ListExtensions
-    open System
     open Grapher.Entities
 
 
@@ -59,3 +58,19 @@ module ClusteringUtils =
         let (expansionFactor, _) = MclOptions.get(option)
         recursivlyExpand (expansionFactor) matrix
         expanded
+
+
+    let inflate(option : MclOptions)(matrix : float[,]) =
+        let (_, inflationFactor) = MclOptions.get(option)
+        let inflated = Array2D.map(fun x -> x ** float(inflationFactor)) matrix
+
+        let sum = [| for e in [0.. Array2D.length2(inflated) - 1 ] do
+                        yield Array.sum(inflated.[*, e]) |]
+
+        let normalized = [| for e in [0 .. Array2D.length2(inflated) - 1] do
+                            yield [| for i in inflated.[*, e] do 
+                                       yield   i / (float(sum.[e])) |] |]
+        
+        let finalArray = Array2D.zeroCreate (Array2D.length1 matrix) (Array2D.length2 matrix)
+        normalized |> Array.iteri(fun i e -> e |> Array.iteri(fun j v -> Array2D.set finalArray i j v))
+        finalArray 

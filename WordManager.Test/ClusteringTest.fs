@@ -82,3 +82,16 @@ module ClusteringTest=
         Assert.True(MclOptions.create(-1, 2).IsNone)
         Assert.True(MclOptions.create(1,-2).IsNone)
         Assert.True(MclOptions.create(1,1).IsSome)
+
+    [<Fact>]
+    let testMatrixInflation() =
+        let mat = [| [|0.35; 0.31; 0.38; 0.31|]; [|0.23; 0.31; 0.13; 0.31|]; [|0.19; 0.08; 0.38; 0.08 |]; [|0.23; 0.31; 0.13; 0.31|] |]
+        let twoDimArr = Array2D.zeroCreate 4 4
+        mat |> Array.iteri(fun i e -> e |> Array.iteri(fun j v -> Array2D.set twoDimArr i j v))
+
+        let inflated = MclOptions.create(2,2)
+                       |> Option.map(fun opt -> ClusteringUtils.inflate(opt)(twoDimArr))
+
+        Assert.True(inflated.IsSome)
+        Assert.True(inflated.Value.[0,*] = [| 0.46331316187594551; 0.20007564296520428; 0.13653555219364602; 0.20007564296520428 |])
+       
